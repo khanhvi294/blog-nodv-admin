@@ -1,8 +1,28 @@
-import { configureStore } from "@reduxjs/toolkit";
-import counter from "./slice/counter";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import userReducer from "./slices/userSlice";
+import authReducer from "./slices/authSlice";
 
-export const store = configureStore({
-  reducer: {
-    counter123: counter,
-  },
+const rootReducer = combineReducers({
+  user: userReducer,
+  auth: authReducer,
 });
+
+const persistConfig = {
+  key: "root",
+  version: 1,
+  storage,
+  whitelist: ["user"],
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});
+
+export default store;
