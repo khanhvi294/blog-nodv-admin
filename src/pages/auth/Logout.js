@@ -10,7 +10,7 @@ const Logout = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    navigate(appRoutes.HOME);
+    navigate(appRoutes.AUTH_LOGIN);
     dispatch(logout());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
