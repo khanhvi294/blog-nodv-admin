@@ -10,21 +10,37 @@ import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import * as React from "react";
-import { Link } from "react-router-dom";
-
-const settings = [
-  { title: "Profile", path: "/profile" },
-  { title: "Logout", path: "/logout" },
-];
+import { Link, useNavigate } from "react-router-dom";
+import { appRoutes } from "../../routers/AppRoutes";
+import useLogout from "../../hooks/useLogout";
 
 function Navbar() {
+  const anchorRef = React.useRef();
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const navigate = useNavigate();
+  const { handleLogout } = useLogout();
+
+  //   React.useEffect(() => {
+  //     setTimeout(() => setAnchorEl(anchorRef?.current), 1)
+  // },  [anchorRef])
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const handleGoToProfile = React.useCallback(() => {
+    console.log("okok");
+    navigate(appRoutes.PROFILE);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const settings = React.useRef([
+    { title: "Profile", path: "/profile", handleOnClick: handleGoToProfile },
+    { title: "Logout", path: "/logout", handleOnClick: handleLogout },
+  ]).current;
+
   return (
     <AppBar className="!w-full !bg-black" position="sticky">
       <Container>
@@ -67,10 +83,10 @@ function Navbar() {
               {settings.map((setting) => (
                 <MenuItem
                   key={setting.title}
-                  onClick={handleCloseUserMenu}
+                  onClick={setting.handleOnClick}
                   className="w-36"
                 >
-                  <Link to={setting.path}>{setting.title}</Link>
+                  <p>{setting.title}</p>
                 </MenuItem>
               ))}
             </Menu>

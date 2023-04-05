@@ -6,7 +6,7 @@ const ProtectedRoutes = () => {
   const { isLogin } = useSelector((state) => state.user.data);
   const user = useSelector((state) => state.user.data);
 
-  console.log("isLogin ", isLogin, user);
+  // console.log("isLogin ", isLogin, user);
   return isLogin ? <Outlet /> : <Navigate to={appRoutes.AUTH_LOGIN} replace />;
 };
 
