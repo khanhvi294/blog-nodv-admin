@@ -6,6 +6,7 @@ import { updateUserInfo } from "./redux/slices/userSlice";
 import { getAuthInfo } from "./api/authApi";
 import { checkedRole } from "./utils/checkedRole";
 import useLogout from "./hooks/useLogout";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   const { isLogin } = useSelector((state) => state.user.data);
@@ -19,12 +20,18 @@ function App() {
       if (checkedRole(data)) {
         dispatch(updateUserInfo(data));
       } else {
+        toast.error("You don't have permission for this resources");
         handleLogout();
       }
     },
   });
 
-  return <AppRoutes />;
+  return (
+    <>
+      <Toaster position="top-right" />
+      <AppRoutes />;
+    </>
+  );
 }
 
 export default App;
