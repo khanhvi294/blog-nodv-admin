@@ -9,7 +9,6 @@ const UserPage = lazy(() => import("../pages/users/UserPage"));
 const HomePage = lazy(() => import("../pages/home/HomePage"));
 const PostPage = lazy(() => import("../pages/posts/PostPage"));
 const ReportPage = lazy(() => import("../pages/reports/ReportPage"));
-const WarningPage = lazy(() => import("../pages/warning/WarningPage"));
 const NotificationPage = lazy(() =>
   import("../pages/notifications/NotificationPage")
 );
@@ -23,7 +22,6 @@ export const appRoutes = {
   USER: "/users",
   POST: "/posts",
   REPORT: "/reports",
-  WARNING: "/warning",
   AUTH_LOGIN: "/login",
   NOTIFICATIONS: "/notifications",
   PROFILE: "/profile",
@@ -56,10 +54,6 @@ const AppRoutes = () => {
             {
               path: appRoutes.REPORT,
               element: <ReportPage />,
-            },
-            {
-              path: appRoutes.WARNING,
-              element: <WarningPage />,
             },
             { path: appRoutes.NOTIFICATIONS, element: <NotificationPage /> },
             {
