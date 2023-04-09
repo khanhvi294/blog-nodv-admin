@@ -3,7 +3,7 @@ import logo from "../../assets/images/login-page.png";
 import SocialLogin from "../../features/auth/SocialLogin";
 import { Link } from "react-router-dom";
 
-// rgb(215, 251, 226); D7FBE2
+// D7FBE2
 const LoginPage = () => {
   return (
     <div className="flex h-screen overflow-hidden">

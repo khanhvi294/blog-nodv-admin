@@ -1,12 +1,17 @@
 import { useSelector } from "react-redux";
-import { Navigate, Outlet } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 import React from "react";
 import { appRoutes } from "./AppRoutes";
+import { checkedRole } from "../utils/checkedRole";
 
 const PublicRouter = () => {
-  const { isLogin } = useSelector((state) => state.user.data);
+  const { isLogin, info } = useSelector((state) => state.user.data);
+  const navigate = useNavigate();
+  if (isLogin && checkedRole(info)) {
+    navigate(appRoutes.HOME);
+  }
 
-  return isLogin ? <Navigate to={appRoutes.HOME} replace /> : <Outlet />;
+  return <Outlet />;
 };
 
 export default PublicRouter;
