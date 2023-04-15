@@ -181,14 +181,13 @@ const SidebarLeft = () => {
       <div className="flex h-[69px] justify-center font-bold">
         <Logo />
       </div>
-      <div className="flex flex-1 h-full justify-center flex-col gap-8">
+      <div className="flex flex-1 h-full justify-center items-center flex-col gap-8">
         {navbarItems.map((item) => {
           const isActive = matchPath(item.path, pathname);
-
           return (
             <NavLink key={item.title} to={item.path} className="active">
               <Tooltip title={item.title} placement="right" arrow>
-                <IconButton className={`h-10 text-xl !text-black w-full`}>
+                <IconButton className={`h-10 text-xl !text-black`}>
                   {isActive ? item.iconActive : item.icon}
                 </IconButton>
               </Tooltip>
