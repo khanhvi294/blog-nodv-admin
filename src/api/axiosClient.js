@@ -51,13 +51,18 @@ axiosClientPrivate.interceptors.request.use(
 
 axiosClientPrivate.interceptors.response.use(
   function (response) {
+    console.log("response ", response);
+
     return response.data;
   },
   function (error) {
+    console.log("error axios ", error);
+
     if (error.code === "ERR_NETWORK") {
       // window.location.href = '/404';
     }
-    return Promise.reject(error.response.data);
+    // return Promise.reject(error.data);
+    return error;
   }
 );
 
@@ -77,10 +82,6 @@ axiosClient.interceptors.response.use(
     return response.data;
   },
   function (error) {
-    if (error.response.data.status === 404) {
-      window.location.href = "/404";
-    }
-
     return Promise.reject(error.response.data);
   }
 );
