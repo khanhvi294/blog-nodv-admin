@@ -7,5 +7,9 @@ const userApi = {
       `${url}/${userId}${!!isIncrease ? "?isIncrease=" + isIncrease : ""}`
     );
   },
+  getAllUsers: () => axiosClientPrivate.get(`${url}/allUsers`),
+  updateStatusUser: (id) =>
+    axiosClientPrivate.patch(`${url}/updateStatusUser/${id}`),
 };
-export const { updateCountNotifications } = userApi;
+export const { updateCountNotifications, getAllUsers, updateStatusUser } =
+  userApi;
