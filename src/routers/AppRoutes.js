@@ -16,11 +16,15 @@ const ProfilePage = lazy(() => import("../pages/profile/ProfilePage"));
 const LoginPage = lazy(() => import("../pages/auth/LoginPage"));
 const RedirectLogin = lazy(() => import("../pages/auth/RedirectLogin"));
 const Logout = lazy(() => import("../pages/auth/Logout"));
+const CommentReportPage = lazy(() =>
+  import("../pages/comment/CommentReportPage")
+);
 
 export const appRoutes = {
   HOME: "/",
   USER: "/users",
   POST: "/posts",
+  COMMENT_REPORT: "/commentreport",
   REPORT: "/reports",
   AUTH_LOGIN: "/login",
   NOTIFICATIONS: "/notifications",
@@ -50,6 +54,10 @@ const AppRoutes = () => {
             {
               path: appRoutes.POST,
               element: <PostPage />,
+            },
+            {
+              path: appRoutes.COMMENT_REPORT,
+              element: <CommentReportPage />,
             },
             {
               path: appRoutes.REPORT,

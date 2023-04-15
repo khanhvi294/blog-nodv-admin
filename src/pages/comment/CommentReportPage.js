@@ -1,43 +1,52 @@
-import { Avatar, Box, Button, Chip, Modal, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-// import DataTable from "../../components/DataTable";
-import { getAllUsers, updateStatusUser } from "../../api/userApi";
-import { toast } from "react-toastify";
+import { Avatar, Chip } from "@mui/material";
 import {
   DataGrid,
   GridToolbarContainer,
   GridToolbarFilterButton,
 } from "@mui/x-data-grid";
-const UserPage = () => {
+import React, { useEffect, useState } from "react";
+import CustomModal from "../../components/CustomModal";
+import ConfirmModal from "../../components/ConfirmModal";
+import { getAllReportComment } from "../../api/commentApi";
+import { updateReportComment } from "../../api/commentApi";
+import { toast } from "react-toastify";
+const CommentReportPage = () => {
   const columns = [
-    { field: "id", headerName: "ID", width: 350 },
+    { field: "commentId", headerName: "ID", width: 350 },
     {
-      field: "Avatar",
-      width: 100,
-      sortable: false,
-      renderCell: (params) => {
-        return <Avatar src={params.row.avatar} />;
-      },
+      field: "count",
+      headerName: "Count Report",
+      width: 150,
+      // renderCell: (params) => {
+      //   return params.row.type === 1
+      //     ? "Rules Violation"
+      //     : params.row.type
+      //     ? "Harassment"
+      //     : "Spam";
+      // },
     },
+    // {
+    //   field: "useraa",
+    //   headerName: "User report",
+    //   width: 250,
+    //   renderCell: (params) => {
+    //     return params.row.user.username;
+    //   },
+    // },
     {
-      field: "username",
-      headerName: "Username",
-      width: 300,
-    },
-    {
-      field: "email",
-      headerName: "Email",
+      field: "contentComment",
+      headerName: "Content comment reported",
       width: 350,
     },
     {
-      field: "isActive",
+      field: "status",
       headerName: "Status",
       width: 150,
       sortable: false,
       renderCell: (params) => {
-        return params.row.isActive ? (
+        return !params.row.status ? (
           <Chip
-            label="Active"
+            label="Pending"
             color="success"
             variant="outlined"
             className="w-20 !h-7"
@@ -53,27 +62,40 @@ const UserPage = () => {
       width: 90,
       sortable: false,
       renderCell: (params) => {
-        return params.row.isActive ? (
+        return !params.row.status ? (
           <svg
+            className="cursor-pointer"
             xmlns="http://www.w3.org/2000/svg"
+            width="26"
+            height="26"
             viewBox="0 0 24 24"
-            fill="currentColor"
-            className="w-6 h-6"
+            fill="none"
+            stroke="#000000"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           >
-            <path
-              fillRule="evenodd"
-              d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z"
-              clipRule="evenodd"
-            />
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
           </svg>
         ) : (
           <svg
             xmlns="http://www.w3.org/2000/svg"
+            width="26"
+            height="26"
             viewBox="0 0 24 24"
-            fill="currentColor"
-            className="w-6 h-6"
+            fill="none"
+            stroke="#bababa"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           >
-            <path d="M18 1.5c2.9 0 5.25 2.35 5.25 5.25v3.75a.75.75 0 01-1.5 0V6.75a3.75 3.75 0 10-7.5 0v3a3 3 0 013 3v6.75a3 3 0 01-3 3H3.75a3 3 0 01-3-3v-6.75a3 3 0 013-3h9v-3c0-2.9 2.35-5.25 5.25-5.25z" />
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
           </svg>
         );
       },
@@ -83,14 +105,14 @@ const UserPage = () => {
   const [rows, setRows] = useState(data ? data : []);
   useEffect(() => {
     fetchData();
-    console.log(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   async function fetchData() {
-    const listData = await getAllUsers();
+    const listData = await getAllReportComment();
     setData([listData]);
     setRows(listData);
   }
+
   return (
     <div className="flex justify-center w-full">
       <div className="w-[1350px] bg-white mt-7">
@@ -100,13 +122,14 @@ const UserPage = () => {
   );
 };
 
+export default CommentReportPage;
+
 function DataTable({ columns, rows, setRows }) {
   const [openInfo, setOpenInfo] = React.useState(false);
   const [openConfirm, setOpenConfirm] = React.useState(false);
   const [currentRow, setCurrentRow] = React.useState(null);
   const [idReport, setIdReport] = useState("");
   const [dataRow, setDataRow] = useState(rows ? rows : []);
-  const [isActive, setisActive] = useState(false);
 
   const handleConfirm = async () => {
     // eslint-disable-next-line array-callback-return
@@ -116,21 +139,19 @@ function DataTable({ columns, rows, setRows }) {
     //   }
     // });
     // setRows(newRows);
-    var log = await updateStatusUser(idReport);
-    toast.success("BlockUser successfully");
+    var log = await updateReportComment(idReport);
     // console.log(log);
     if (log !== "") {
-      toast.success("BlockUser successfully");
+      toast.success("Delete successfully");
     } else {
-      toast.error("BlockUser fail");
+      toast.error("Delete fail");
     }
     setOpenConfirm(false);
   };
 
-  const handleOpen = (id, isActive) => {
+  const handleOpen = (id) => {
     setOpenConfirm(true);
     setIdReport(id);
-    setisActive(isActive);
     // console.log(idReport);
   };
 
@@ -155,52 +176,22 @@ function DataTable({ columns, rows, setRows }) {
           },
         }}
         onCellClick={(params) => {
-          return params.field === "action"
-            ? handleOpen(params.row.id, params.row.isActive)
-            : toast.success("BlockUser successfully");
+          return params.field === "action" && params.row.status === false
+            ? handleOpen(params.row.id)
+            : toast.success("Delete successfully");
           // return console.log(params);
         }}
       />
 
+      <CustomModal
+        open={openInfo}
+        handleClose={() => setOpenInfo(false)}
+      ></CustomModal>
       <ConfirmModal
         open={openConfirm}
         handleClose={() => setOpenConfirm(false)}
         handleConfirm={handleConfirm}
-        isActive={isActive}
       ></ConfirmModal>
     </div>
   );
 }
-
-const ConfirmModal = ({ open, handleClose, handleConfirm, isActive }) => {
-  return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-      className="flex items-center justify-center"
-    >
-      <Box className="bg-white w-[333px] h-[220px] flex flex-col !justify-center !items-center gap-3">
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          {isActive ? "Block" : "Unblock"} user
-        </Typography>
-        <Typography
-          id="modal-modal-description"
-          sx={{ mb: 2 }}
-          className="text-slate-500"
-        >
-          You want {isActive ? "block" : "unblock"} this user?
-        </Typography>
-        <div className="flex gap-4">
-          <Button color="success" onClick={handleConfirm}>
-            Confirm
-          </Button>
-          <Button onClick={handleClose}>Cancel</Button>
-        </div>
-      </Box>
-    </Modal>
-  );
-};
-
-export default UserPage;
