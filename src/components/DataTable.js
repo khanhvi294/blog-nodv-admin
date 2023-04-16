@@ -10,10 +10,14 @@ import {
 import ConfirmModal from './ConfirmModal';
 import CustomModal from './CustomModal';
 
-export default function DataTable({ columns, rows, setRows }) {
+export default function DataTable({ columns, rows, setRows, comModal }) {
 	const [openInfo, setOpenInfo] = React.useState(false);
 	const [openConfirm, setOpenConfirm] = React.useState(false);
 	const [currentRow, setCurrentRow] = React.useState(null);
+
+	const handlePageChange = (params) => {
+		console.log('params ', params);
+	};
 
 	const handleConfirm = () => {
 		const newRows = rows.map((item) => {
@@ -36,6 +40,10 @@ export default function DataTable({ columns, rows, setRows }) {
 				disableColumnMenu
 				rows={rows}
 				columns={columns}
+				// paginationModel={{ pageSize: 5, page: 0 }}
+				// pageSizeOptions={[5, 10]}
+				// paginationMode="server"
+				// onPageChange={handlePageChange}
 				slots={{
 					toolbar: () => {
 						return (
@@ -46,13 +54,16 @@ export default function DataTable({ columns, rows, setRows }) {
 					},
 				}}
 				onCellClick={(params) => {
-					return params.field === 'action'
-						? handleChangeUser(params.row)
-						: setOpenInfo(true);
+					return (
+						params.field === 'action' &&
+						handleChangeUser(params.row)
+					);
+					// : setOpenInfo(true);
 				}}
 			/>
 			<CustomModal
 				open={openInfo}
+				children={comModal}
 				handleClose={() => setOpenInfo(false)}
 			></CustomModal>
 			<ConfirmModal

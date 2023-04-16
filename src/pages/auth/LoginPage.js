@@ -1,7 +1,8 @@
 import React from "react";
 import logo from "../../assets/images/login-page.png";
-import SocialLogin from "../../features/auth/SocialLogin";
+// import SocialLogin from "../../features/auth/SocialLogin";
 import { Link } from "react-router-dom";
+import LoginForm from "../../features/auth/LoginForm";
 
 // D7FBE2
 const LoginPage = () => {
@@ -20,7 +21,7 @@ const LoginPage = () => {
         <img src={logo} alt="logo" className="w-[70%] mx-auto" />
       </div>
       <div className="bg-[#D7FBE2] w-[35%]">
-        <SocialLogin />
+        <LoginForm />
         <div className="text-center text-slate-400">
           <Link to={"/"} className="underline decoration-solid">
             Terms of Service
