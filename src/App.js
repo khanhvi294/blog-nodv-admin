@@ -1,4 +1,3 @@
-import './App.css';
 import AppRoutes from './routers/AppRoutes';
 import { useDispatch, useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
