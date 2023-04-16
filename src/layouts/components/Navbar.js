@@ -15,7 +15,7 @@ import { appRoutes } from "../../routers/AppRoutes";
 import useLogout from "../../hooks/useLogout";
 
 function Navbar() {
-  const anchorRef = React.useRef();
+  const [open, setOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
   const { handleLogout } = useLogout();
@@ -25,24 +25,32 @@ function Navbar() {
   // },  [anchorRef])
 
   const handleOpenUserMenu = (event) => {
+    setOpen(true);
     setAnchorElUser(event.currentTarget);
   };
   const handleCloseUserMenu = () => {
+    setOpen(false);
     setAnchorElUser(null);
   };
   const handleGoToProfile = React.useCallback(() => {
-    console.log("okok");
     navigate(appRoutes.PROFILE);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   const settings = React.useRef([
-    { title: "Profile", path: "/profile", handleOnClick: handleGoToProfile },
+    {
+      title: "Profile",
+      path: "/profile",
+      handleOnClick: () => {
+        handleCloseUserMenu();
+        setTimeout(() => handleGoToProfile(), 1);
+      },
+    },
     { title: "Logout", path: "/logout", handleOnClick: handleLogout },
   ]).current;
 
   return (
-    <AppBar className="!w-full !bg-black" position="sticky">
+    <AppBar className="!w-full !bg-black ">
       <Container>
         <Toolbar disableGutters className="justify-end">
           <Box sx={{ flexGrow: 0 }} className="mr-5">
@@ -65,6 +73,7 @@ function Navbar() {
               </IconButton>
             </Tooltip>
             <Menu
+              open={open}
               sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
@@ -77,7 +86,6 @@ function Navbar() {
                 vertical: "top",
                 horizontal: "right",
               }}
-              open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
