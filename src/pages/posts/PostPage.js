@@ -13,8 +13,8 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { Chip } from '@mui/material';
 import { IconWrapper } from '../../components/IconWrapper';
-import { getPosts } from '../../api/postApi';
-import { useInfiniteQuery } from 'react-query';
+import { getPosts, lockPost, unlockPost } from '../../api/postApi';
+import { useInfiniteQuery, useMutation, useQueryClient } from 'react-query';
 import { useSearchParams } from 'react-router-dom';
 
 const PostPage = () => {
@@ -22,6 +22,8 @@ const PostPage = () => {
 		page: 0,
 		pageSize: 9,
 	});
+
+	const queryClient = useQueryClient();
 
 	// using usesSearchParam
 	const [searchParam] = useSearchParams('');
@@ -40,6 +42,20 @@ const PostPage = () => {
 	}, [searchParam]);
 
 	const storeKey = ['posts', filter];
+	const updatePost = () => {
+		queryClient.invalidateQueries(storeKey);
+	};
+	const lockPostMutation = useMutation(lockPost, {
+		onSuccess: () => {
+			updatePost();
+		},
+	});
+
+	const unLockPostMutation = useMutation(unlockPost, {
+		onSuccess: () => {
+			updatePost();
+		},
+	});
 	const queryFn = getPosts;
 	const columns = [
 		{ field: 'id', headerName: 'ID', width: 240 },
@@ -59,10 +75,11 @@ const PostPage = () => {
 								className="w-20 !h-7"
 							/>
 						);
-					case 'LOCK':
+					case 'LOCKED':
 						return (
 							<Chip
 								label="Lock"
+								color="warning"
 								variant="outlined"
 								className="w-20 !h-7"
 							/>
@@ -107,18 +124,31 @@ const PostPage = () => {
 					}
 					label="Delete"
 				/>,
-				<GridActionsCellItem
-					icon={
-						<IconWrapper>
-							{params.row.status === 'LOCK' ? (
-								<LockOpenIcon />
-							) : (
+				params.row.status === 'LOCKED' ? (
+					<GridActionsCellItem
+						onClick={() => {
+							unLockPostMutation.mutate(params.row.id);
+						}}
+						icon={
+							<IconWrapper>
 								<LockClosedIcon />
-							)}
-						</IconWrapper>
-					}
-					label="Delete"
-				/>,
+							</IconWrapper>
+						}
+						label="Delete"
+					/>
+				) : (
+					<GridActionsCellItem
+						onClick={() => {
+							lockPostMutation.mutate(params.row.id);
+						}}
+						icon={
+							<IconWrapper>
+								<LockOpenIcon />
+							</IconWrapper>
+						}
+						label="Clock"
+					/>
+				),
 			],
 		},
 	];

@@ -29,6 +29,8 @@ const postApi = {
 		const paramsString = generateParamsString(params);
 		return axiosClientPrivate.get(`${url}?${paramsString}`);
 	},
+	lockPost: (id) => axiosClientPrivate.patch(`/admin${url}/${id}/lock`),
+	unlockPost: (id) => axiosClientPrivate.patch(`/admin${url}/${id}/unlock`),
 };
 
-export const { getPosts } = postApi;
+export const { getPosts, lockPost, unlockPost } = postApi;
