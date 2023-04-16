@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../../api/authApi";
 import { setAccessToken } from "../../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const LoginForm = () => {
   const {
@@ -32,6 +33,7 @@ const LoginForm = () => {
     },
     onError: (error) => {
       console.log("error ", error);
+      toast.error(error.message);
     },
   });
 

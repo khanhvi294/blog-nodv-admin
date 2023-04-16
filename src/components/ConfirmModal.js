@@ -1,7 +1,7 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
 import React from "react";
 
-const ConfirmModal = ({ open, handleClose, handleConfirm }) => {
+const ConfirmModal = ({ title, message, open, handleClose, handleConfirm }) => {
   return (
     <Modal
       open={open}
@@ -12,20 +12,20 @@ const ConfirmModal = ({ open, handleClose, handleConfirm }) => {
     >
       <Box className="bg-white w-[333px] h-[220px] flex flex-col !justify-center !items-center gap-3">
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Block user
+          {title || "Block user"}
         </Typography>
         <Typography
           id="modal-modal-description"
           sx={{ mb: 2 }}
           className="text-slate-500"
         >
-          You want block this user?
+          {message || "You want block this user?"}
         </Typography>
         <div className="flex gap-4">
           <Button color="success" onClick={handleConfirm}>
-            Xác Nhận
+            Confirm
           </Button>
-          <Button onClick={handleClose}>Hủy</Button>
+          <Button onClick={handleClose}>Cancel</Button>
         </div>
       </Box>
     </Modal>
