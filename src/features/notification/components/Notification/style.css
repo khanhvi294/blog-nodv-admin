@@ -1,0 +1,9 @@
+.notification {
+	border-style: solid;
+	border-width: 0 0 0 2px;
+	padding: 1rem;
+}
+
+.notification:hover {
+	background-color: #f1f5f9 !important;
+}

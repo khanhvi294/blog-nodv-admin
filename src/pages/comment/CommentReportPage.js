@@ -1,15 +1,14 @@
-import { Avatar, Chip } from "@mui/material";
+import { Chip } from "@mui/material";
 import {
   DataGrid,
   GridToolbarContainer,
   GridToolbarFilterButton,
 } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
-import CustomModal from "../../components/CustomModal";
-import ConfirmModal from "../../components/ConfirmModal";
-import { getAllReportComment } from "../../api/commentApi";
-import { updateReportComment } from "../../api/commentApi";
 import { toast } from "react-toastify";
+import { getAllReportComment, updateReportComment } from "../../api/commentApi";
+import ConfirmModal from "../../components/ConfirmModal";
+import CustomModal from "../../components/CustomModal";
 const CommentReportPage = () => {
   const columns = [
     { field: "commentId", headerName: "ID", width: 350 },
@@ -113,85 +112,86 @@ const CommentReportPage = () => {
     setRows(listData);
   }
 
-  return (
-    <div className="flex justify-center w-full">
-      <div className="w-[1350px] bg-white mt-7">
-        <DataTable columns={columns} rows={rows} setRows={setRows} />
-      </div>
-    </div>
-  );
+	return (
+		<div className="flex justify-center w-full">
+			<div className="w-[1350px] bg-white mt-7">
+				<DataTable columns={columns} rows={rows} setRows={setRows} />
+			</div>
+		</div>
+	);
 };
 
 export default CommentReportPage;
 
 function DataTable({ columns, rows, setRows }) {
-  const [openInfo, setOpenInfo] = React.useState(false);
-  const [openConfirm, setOpenConfirm] = React.useState(false);
-  const [currentRow, setCurrentRow] = React.useState(null);
-  const [idReport, setIdReport] = useState("");
-  const [dataRow, setDataRow] = useState(rows ? rows : []);
+	const [openInfo, setOpenInfo] = React.useState(false);
+	const [openConfirm, setOpenConfirm] = React.useState(false);
+	const [currentRow, setCurrentRow] = React.useState(null);
+	const [idReport, setIdReport] = useState('');
+	const [dataRow, setDataRow] = useState(rows ? rows : []);
 
-  const handleConfirm = async () => {
-    // eslint-disable-next-line array-callback-return
-    // const newRows = rows.map((item) => {
-    //   if (item.commentId === idReport) {
-    //     item.status = !item.status;
-    //   }
-    // });
-    // setRows(newRows);
-    var log = await updateReportComment(idReport);
-    // console.log(log);
-    if (log !== "") {
-      toast.success("Delete successfully");
-    } else {
-      toast.error("Delete fail");
-    }
-    setOpenConfirm(false);
-  };
+	const handleConfirm = async () => {
+		// eslint-disable-next-line array-callback-return
+		// const newRows = rows.map((item) => {
+		//   if (item.commentId === idReport) {
+		//     item.status = !item.status;
+		//   }
+		// });
+		// setRows(newRows);
+		var log = await updateReportComment(idReport);
+		// console.log(log);
+		if (log !== '') {
+			toast.success('Delete successfully');
+		} else {
+			toast.error('Delete fail');
+		}
+		setOpenConfirm(false);
+	};
 
-  const handleOpen = (id) => {
-    setOpenConfirm(true);
-    setIdReport(id);
-    // console.log(idReport);
-  };
+	const handleOpen = (id) => {
+		setOpenConfirm(true);
+		setIdReport(id);
+		// console.log(idReport);
+	};
 
-  const handleChangeUser = (user) => {
-    setCurrentRow(user);
-    setOpenConfirm(true);
-  };
+	const handleChangeUser = (user) => {
+		setCurrentRow(user);
+		setOpenConfirm(true);
+	};
 
-  return (
-    <div style={{ height: 600, width: "100%" }}>
-      <DataGrid
-        disableColumnMenu
-        rows={rows ? rows : []}
-        columns={columns}
-        slots={{
-          toolbar: () => {
-            return (
-              <GridToolbarContainer>
-                <GridToolbarFilterButton></GridToolbarFilterButton>
-              </GridToolbarContainer>
-            );
-          },
-        }}
-        onCellClick={(params) => {
-          return params.field === "action" && params.row.status === false
-            ? handleOpen(params.row.id)
-            : toast.success("Delete successfully");
-          // return console.log(params);
-        }}
-      />
+	return (
+		<div style={{ height: 600, width: '100%' }}>
+			<DataGrid
+				disableColumnMenu
+				rows={rows ? rows : []}
+				columns={columns}
+				slots={{
+					toolbar: () => {
+						return (
+							<GridToolbarContainer>
+								<GridToolbarFilterButton></GridToolbarFilterButton>
+							</GridToolbarContainer>
+						);
+					},
+				}}
+				onCellClick={(params) => {
+					return params.field === 'action' &&
+						params.row.status === false
+						? handleOpen(params.row.id)
+						: toast.success('Delete successfully');
+					// return console.log(params);
+				}}
+			/>
 
-      <CustomModal
-        open={openInfo}
-        handleClose={() => setOpenInfo(false)}
-      ></CustomModal>
-      <ConfirmModal
-        open={openConfirm}
-        handleClose={() => setOpenConfirm(false)}
-        handleConfirm={handleConfirm}
-      ></ConfirmModal>
-    </div>
-  );
+			<CustomModal
+				open={openInfo}
+				handleClose={() => setOpenInfo(false)}
+			></CustomModal>
+			<ConfirmModal
+				open={openConfirm}
+				handleClose={() => setOpenConfirm(false)}
+				handleConfirm={handleConfirm}
+			></ConfirmModal>
+		</div>
+	);
 }
