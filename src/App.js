@@ -1,4 +1,3 @@
-import "./App.css";
 import AppRoutes from "./routers/AppRoutes";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
@@ -11,7 +10,6 @@ import toast, { Toaster } from "react-hot-toast";
 function App() {
   const { isLogin } = useSelector((state) => state.user.data);
   const dispatch = useDispatch();
-  // const queryClient = useQueryClient();
   const { handleLogout } = useLogout();
 
   useQuery("user", getAuthInfo, {
@@ -23,6 +21,9 @@ function App() {
         toast.error("You don't have permission for this resources");
         handleLogout();
       }
+    },
+    onError: (err) => {
+      console.log("err dcm ", err);
     },
   });
 

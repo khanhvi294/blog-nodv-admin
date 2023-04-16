@@ -8,17 +8,19 @@
     "@heroicons/react": "^2.0.16",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.9",
-    "@mui/x-data-grid": "^6.0.3",
+    "@mui/x-data-grid": "^6.2.0",
     "@reduxjs/toolkit": "1.8.5",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
     "axios": "0.27.2",
+    "chart.js": "^4.2.1",
     "firebase": "^9.19.1",
     "jwt-decode": "^3.1.2",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
     "react-hot-toast": "^2.4.0",
@@ -56,5 +58,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0"
   }
 }
