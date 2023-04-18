@@ -8,6 +8,7 @@ const adminApi = {
   changeReportingStatus: (id) =>
     axiosClientPrivate.patch(`${url}/reporting/${id}`),
   getOverview: () => axiosClientPrivate.get(`${url}/overview`),
+  createWarning: (data) => axiosClientPrivate.post(`${url}/warning`, data),
 };
 
 export const {
@@ -15,6 +16,7 @@ export const {
   getReportingById,
   changeReportingStatus,
   getOverview,
+  createWarning,
 } = adminApi;
 
 export default adminApi;
