@@ -9,6 +9,10 @@ const adminApi = {
     axiosClientPrivate.patch(`${url}/reporting/${id}`),
   getOverview: () => axiosClientPrivate.get(`${url}/overview`),
   createWarning: (data) => axiosClientPrivate.post(`${url}/warning`, data),
+  getAllComment: (page) =>
+    axiosClientPrivate.get(`${url}/comments/list?page=${page}&limit=9`),
+  getCommentById: (id) => axiosClientPrivate.get(`${url}/comment/${id}`),
+  deleteCommentById: (id) => axiosClientPrivate.delete(`${url}/comment/${id}`),
 };
 
 export const {
@@ -17,6 +21,9 @@ export const {
   changeReportingStatus,
   getOverview,
   createWarning,
+  getAllComment,
+  getCommentById,
+  deleteCommentById,
 } = adminApi;
 
 export default adminApi;

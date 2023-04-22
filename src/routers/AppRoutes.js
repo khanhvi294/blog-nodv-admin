@@ -24,7 +24,7 @@ export const appRoutes = {
   HOME: "/",
   USER: "/users",
   POST: "/posts",
-  COMMENT_REPORT: "/commentreport",
+  COMMENT_REPORT: "/comments",
   REPORT: "/reports",
   AUTH_LOGIN: "/login",
   NOTIFICATIONS: "/notifications",

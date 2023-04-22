@@ -2,7 +2,7 @@ import { Avatar, Box, Button, Chip, Modal, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 // import DataTable from "../../components/DataTable";
 import { getAllUsers, updateStatusUser } from "../../api/userApi";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import {
   DataGrid,
   GridToolbarContainer,
@@ -157,7 +157,7 @@ function DataTable({ columns, rows, setRows }) {
         onCellClick={(params) => {
           return params.field === "action"
             ? handleOpen(params.row.id, params.row.isActive)
-            : toast.success("BlockUser successfully");
+            : "";
           // return console.log(params);
         }}
       />
