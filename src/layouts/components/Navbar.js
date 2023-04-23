@@ -1,16 +1,13 @@
 import * as React from "react";
 
-import { Button, CircularProgress, Popover, Typography } from "@mui/material";
+import { CircularProgress, Popover } from "@mui/material";
 import { EyeIcon, FlagIcon } from "../../assets/icons/heroicons";
 import { Link, useNavigate } from "react-router-dom";
 import {
   getNotifications,
   setNotificationRead,
 } from "../../api/notificationApi";
-import {
-  resetCountNotifications,
-  updateCountNotifications,
-} from "../../api/userApi";
+import { resetCountNotifications } from "../../api/userApi";
 import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQuery } from "react-query";
 
