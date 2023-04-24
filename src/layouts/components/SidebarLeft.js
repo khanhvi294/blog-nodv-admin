@@ -2,6 +2,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import React from "react";
 import { matchPath, NavLink, useLocation } from "react-router-dom";
 import Logo from "./Logo";
+import { appRoutes } from "../../routers/AppRoutes";
 
 const SidebarLeft = () => {
   const { pathname } = useLocation();
@@ -35,7 +36,7 @@ const SidebarLeft = () => {
           <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
         </svg>
       ),
-      path: "/",
+      path: appRoutes.HOME,
     },
 
     {
@@ -70,7 +71,7 @@ const SidebarLeft = () => {
           />
         </svg>
       ),
-      path: "/users",
+      path: appRoutes.USER,
     },
     {
       title: "Posts",
@@ -106,7 +107,7 @@ const SidebarLeft = () => {
           <path d="M12.971 1.816A5.23 5.23 0 0114.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 013.434 1.279 9.768 9.768 0 00-6.963-6.963z" />
         </svg>
       ),
-      path: "/posts",
+      path: appRoutes.POST,
     },
     {
       title: "Report Comment",
@@ -141,7 +142,7 @@ const SidebarLeft = () => {
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
       ),
-      path: "/comments",
+      path: appRoutes.COMMENT_REPORT,
     },
     {
       title: "Reports",
@@ -175,7 +176,7 @@ const SidebarLeft = () => {
           />
         </svg>
       ),
-      path: "/reports",
+      path: appRoutes.REPORT,
     },
   ];
   return (
