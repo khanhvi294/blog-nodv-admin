@@ -18,6 +18,10 @@ const adminApi = {
   getOverviewReportings: () =>
     axiosClientPrivate.get(`${url}/overview/reportings`),
   createWarning: (data) => axiosClientPrivate.post(`${url}/warning`, data),
+  getAllComment: (page) =>
+    axiosClientPrivate.get(`${url}/comments/list?page=${page}&limit=9`),
+  getCommentById: (id) => axiosClientPrivate.get(`${url}/comment/${id}`),
+  deleteCommentById: (id) => axiosClientPrivate.delete(`${url}/comment/${id}`),
 };
 
 export const {
@@ -30,6 +34,9 @@ export const {
   getOverviewPosts,
   getOverviewUsers,
   getOverviewReportings,
+  getAllComment,
+  getCommentById,
+  deleteCommentById,
 } = adminApi;
 
 export default adminApi;
