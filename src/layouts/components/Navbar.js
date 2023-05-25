@@ -1,16 +1,17 @@
 import * as React from "react";
 
 import { CircularProgress, Popover } from "@mui/material";
-import { EyeIcon, FlagIcon } from "../../assets/icons/heroicons";
+import { useMutation, useQuery } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {
   getNotifications,
   setNotificationRead,
 } from "../../api/notificationApi";
 import { resetCountNotifications } from "../../api/userApi";
-import { useDispatch, useSelector } from "react-redux";
-import { useMutation, useQuery } from "react-query";
+import { EyeIcon, FlagIcon } from "../../assets/icons/heroicons";
 
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
@@ -19,13 +20,12 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
-import { appRoutes } from "../../routers/AppRoutes";
 import { formatRelative } from "date-fns";
-import { setUser } from "../../redux/slices/userSlice";
 import useLogout from "../../hooks/useLogout";
+import { setUser } from "../../redux/slices/userSlice";
+import { appRoutes } from "../../routers/AppRoutes";
 
 function Navbar() {
   const user = useSelector((state) => state.user.data.info);
@@ -60,10 +60,10 @@ function Navbar() {
   ]).current;
 
   return (
-    <AppBar className="!w-full !bg-black ">
-      <Container>
+    <AppBar className="!w-full !bg-white ">
+      <Container className="!pr-9 !max-w-none">
         <Toolbar disableGutters className="justify-end">
-          <Box sx={{ flexGrow: 0 }} className="mr-5">
+          <Box sx={{ flexGrow: 0 }}>
             <Box sx={{ flexGrow: 0 }} className="mr-5">
               <NotificationBell>
                 <IconButton
@@ -72,7 +72,7 @@ function Navbar() {
                   color="inherit"
                 >
                   <Badge badgeContent={17} color="error">
-                    <NotificationsIcon />
+                    <NotificationsNoneIcon className="text-zinc-500" />
                   </Badge>
                 </IconButton>
               </NotificationBell>
@@ -81,7 +81,11 @@ function Navbar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src={user?.avatar} />
+                <Avatar
+                  alt="Remy Sharp"
+                  src={user?.avatar}
+                  className="border-2"
+                />
               </IconButton>
             </Tooltip>
             <Menu
@@ -170,7 +174,7 @@ const NotificationBell = ({ children }) => {
       <div aria-describedby={id} variant="contained" onClick={handleClick}>
         <IconButton size="large" color="inherit">
           <Badge badgeContent={numBadge} color="error">
-            <NotificationsIcon />
+            <NotificationsNoneIcon className="text-zinc-500" />
           </Badge>
         </IconButton>
       </div>
