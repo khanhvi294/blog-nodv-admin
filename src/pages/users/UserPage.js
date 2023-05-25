@@ -59,6 +59,7 @@ const UserPage = () => {
             viewBox="0 0 24 24"
             fill="currentColor"
             className="w-6 h-6"
+            // onClick={fetchData()}
           >
             <path
               fillRule="evenodd"
@@ -81,6 +82,24 @@ const UserPage = () => {
   ];
   const [data, setData] = useState([]);
   const [rows, setRows] = useState(data ? data : []);
+  const confirmBlock = async (idReport, status) => {
+    var log = await updateStatusUser(idReport);
+    if (log !== "") {
+      if (status) {
+        toast.success("BlockUser successfully");
+      } else {
+        toast.success("UnblockUser successfully");
+      }
+    } else {
+      if (status) {
+        toast.success("BlockUser fail");
+      } else {
+        toast.success("UnblockUser fail");
+      }
+    }
+    // setOpenConfirm(false);
+    fetchData();
+  };
   useEffect(() => {
     fetchData();
     console.log(data);
@@ -94,13 +113,18 @@ const UserPage = () => {
   return (
     <div className="flex justify-center w-full">
       <div className="w-[1350px] bg-white mt-7">
-        <DataTable columns={columns} rows={rows} setRows={setRows} />
+        <DataTable
+          columns={columns}
+          rows={rows}
+          setRows={setRows}
+          confirmBlock={confirmBlock}
+        />
       </div>
     </div>
   );
 };
 
-function DataTable({ columns, rows, setRows }) {
+function DataTable({ columns, rows, setRows, confirmBlock }) {
   const [openInfo, setOpenInfo] = React.useState(false);
   const [openConfirm, setOpenConfirm] = React.useState(false);
   const [currentRow, setCurrentRow] = React.useState(null);
@@ -109,21 +133,7 @@ function DataTable({ columns, rows, setRows }) {
   const [isActive, setisActive] = useState(false);
 
   const handleConfirm = async () => {
-    // eslint-disable-next-line array-callback-return
-    // const newRows = rows.map((item) => {
-    //   if (item.commentId === idReport) {
-    //     item.status = !item.status;
-    //   }
-    // });
-    // setRows(newRows);
-    var log = await updateStatusUser(idReport);
-    toast.success("BlockUser successfully");
-    // console.log(log);
-    if (log !== "") {
-      toast.success("BlockUser successfully");
-    } else {
-      toast.error("BlockUser fail");
-    }
+    confirmBlock(idReport, isActive);
     setOpenConfirm(false);
   };
 
