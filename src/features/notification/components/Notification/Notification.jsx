@@ -1,11 +1,12 @@
 import './style.css';
 
+import { formatDistance, formatRelative } from 'date-fns';
+
 import { Avatar } from '@mui/material';
 import { FlagIcon } from '../../../../assets/icons/heroicons';
 import { IconWrapper } from '../../../../components/IconWrapper';
 import { Link } from 'react-router-dom';
 import { NotificationType } from '../../../../config/dataType';
-import { formatRelative } from 'date-fns';
 import { useMemo } from 'react';
 
 export const Notification = ({ notification, setNotificationReadMutation }) => {
@@ -84,14 +85,17 @@ export const Notification = ({ notification, setNotificationReadMutation }) => {
 								{type.message}
 							</span>
 						</span>
-						<div className="flex items-center gap-2 text-sm text-slate-500">
-							<span className="capitalize text-slate-500">
-								{formatRelative(
+						<div className="flex items-center gap-4 text-sm text-slate-500">
+							<span className="first-letter:uppercase text-slate-500 mr-4">
+								{formatDistance(
 									new Date(notification.createdDate),
 									new Date(),
+									{ addSuffix: true },
 								)}
 							</span>
-							<IconWrapper>{type.icon}</IconWrapper>
+							<IconWrapper size="h-5 w-5">
+								{type.icon}
+							</IconWrapper>
 						</div>
 					</div>
 				</div>

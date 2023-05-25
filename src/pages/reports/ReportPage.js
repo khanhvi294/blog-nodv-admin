@@ -1,20 +1,21 @@
-import { Chip } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
-import { useMutation, useQueryClient, useInfiniteQuery } from "react-query";
 import {
   DataGrid,
   GridToolbarContainer,
   GridToolbarFilterButton,
 } from "@mui/x-data-grid";
+import React, { useEffect, useMemo, useState } from "react";
 import {
-  getReportings,
   changeReportingStatus,
   createWarning,
+  getReportings,
 } from "../../api/adminApi";
-import UserList from "../../features/reporting/UserList";
+import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
+
+import { Chip } from "@mui/material";
+import ConfirmModal from "../../components/ConfirmModal";
 import CustomModal from "../../components/CustomModal";
 import Tooltip from "@mui/material/Tooltip";
-import ConfirmModal from "../../components/ConfirmModal";
+import UserList from "../../features/reporting/UserList";
 import { toast } from "react-toastify";
 
 const PAGE_SIZE = 5;
@@ -180,7 +181,7 @@ const ReportPage = () => {
         return params.row.isResolved ? (
           <Tooltip title="Click to set unresolve" placement="right-start" arrow>
             <Chip
-              label="Active"
+              label="Resolved"
               color="success"
               variant="outlined"
               className="w-20 !h-7 hover:cursor-pointer"

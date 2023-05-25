@@ -1,6 +1,12 @@
 import * as React from "react";
 
-import { CircularProgress, Popover } from "@mui/material";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
+import {
+  CircularProgress,
+  ClickAwayListener,
+  Fade,
+  Popper,
+} from "@mui/material";
 import { useMutation, useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,10 +14,8 @@ import {
   getNotifications,
   setNotificationRead,
 } from "../../api/notificationApi";
-import { resetCountNotifications } from "../../api/userApi";
 import { EyeIcon, FlagIcon } from "../../assets/icons/heroicons";
 
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
@@ -23,6 +27,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import { formatRelative } from "date-fns";
+import { resetCountNotifications } from "../../api/userApi";
 import useLogout from "../../hooks/useLogout";
 import { setUser } from "../../redux/slices/userSlice";
 import { appRoutes } from "../../routers/AppRoutes";
@@ -63,8 +68,8 @@ function Navbar() {
     <AppBar className="!w-full !bg-white ">
       <Container className="!pr-9 !max-w-none">
         <Toolbar disableGutters className="justify-end">
-          <Box sx={{ flexGrow: 0 }}>
-            <Box sx={{ flexGrow: 0 }} className="mr-5">
+          <Box sx={{ flexGrow: 0 }} className="mr-5">
+            <Box sx={{ flexGrow: 0 }}>
               <NotificationBell>
                 <IconButton
                   size="large"
@@ -127,6 +132,7 @@ const NotificationBell = ({ children }) => {
   const dispatch = useDispatch();
   const socket = useSelector((state) => state.socket.data);
   const currentUserId = useSelector((state) => state.user.data.info.id);
+  const [open, setOpen] = React.useState(false);
   const numBadge = useSelector(
     (state) => state.user.data.info.notificationsCount
   );
@@ -136,17 +142,9 @@ const NotificationBell = ({ children }) => {
     },
   });
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-    if (numBadge > 0) updateUserCountNotification.mutate();
-  };
-
   const handleClose = () => {
-    setAnchorEl(null);
+    setOpen(false);
   };
-
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
 
   const handleReceiveCountNotificationSocket = React.useCallback(
     (payload) => {
@@ -169,27 +167,41 @@ const NotificationBell = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpen((prev) => !prev);
+
+    if (numBadge > 0) updateUserCountNotification.mutate();
+  };
+
   return (
     <div>
-      <div aria-describedby={id} variant="contained" onClick={handleClick}>
+      <div variant="contained" onClick={handleClick}>
         <IconButton size="large" color="inherit">
           <Badge badgeContent={numBadge} color="error">
             <NotificationsNoneIcon className="text-zinc-500" />
           </Badge>
         </IconButton>
       </div>
-      <Popover
-        id={id}
+      <Popper
         open={open}
         anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
+        placement="bottom"
+        transition
+        className="z-[9999]"
       >
-        <NotificationList />
-      </Popover>
+        {({ TransitionProps }) => (
+          <Fade {...TransitionProps} timeout={350}>
+            <div>
+              <ClickAwayListener onClickAway={handleClose}>
+                <div>
+                  <NotificationList />
+                </div>
+              </ClickAwayListener>
+            </div>
+          </Fade>
+        )}
+      </Popper>
     </div>
   );
 };
@@ -202,7 +214,7 @@ const NotificationList = () => {
     <>
       <div
         id="dropdownNotification"
-        className="z-20 w-full max-w-sm min-w-[360px] bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-800 dark:divide-gray-700"
+        className="z-20 w-full max-w-sm min-w-[360px] divide-y rounded-xl divide-gray-100 shadow dark:bg-gray-800 dark:divide-gray-700"
       >
         {!isLoading ? (
           <>
@@ -244,14 +256,13 @@ function NotificationItem({ notification }) {
   };
 
   return (
-    <Link
-      href="/"
+    <div
       className="flex px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
       onClick={handleClick}
     >
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 rounded-full w-11 h-11">
         <img
-          className="rounded-full w-11 h-11"
+          className="object-cover w-full h-full rounded-full"
           src={notification.sender.avatar}
           alt={notification.sender.username}
         />
@@ -275,6 +286,6 @@ function NotificationItem({ notification }) {
           <div className="flex-shrink-0 rounded-full bg-blue-500 w-3 h-3 " />
         </div>
       )}
-    </Link>
+    </div>
   );
 }
