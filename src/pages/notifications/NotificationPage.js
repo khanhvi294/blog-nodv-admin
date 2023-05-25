@@ -38,7 +38,6 @@ const NotificationsPage = () => {
 		}
 		return () => {
 			if (socket) {
-				console.log('unsubscribing');
 				socket.unsubscribe(topic);
 			}
 		};
@@ -81,13 +80,20 @@ const NotificationsPage = () => {
 	};
 
 	return (
-		<div className="px-10 bg-white">
-			<Tab tabItems={NotificationStatus} onChange={handleTabChange} />
-			{!isLoading ? (
-				<NotificationList notificationList={notifications} />
-			) : (
-				<NotificationListLoading />
-			)}
+		<div className="px-10  h-full pt-4">
+			<div className="shadow w-2/3 bg-white mx-auto h-full rounded-xl">
+				<div className="sticky">
+					<Tab
+						tabItems={NotificationStatus}
+						onChange={handleTabChange}
+					/>
+				</div>
+				{!isLoading ? (
+					<NotificationList notificationList={notifications} />
+				) : (
+					<NotificationListLoading />
+				)}
+			</div>
 		</div>
 	);
 };

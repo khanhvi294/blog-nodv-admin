@@ -164,13 +164,13 @@ const PostPage = () => {
   );
 
   const [rowCountState, setRowCountState] = useState(
-    data?.pages[0]?.totalPages || 0
+    data?.pages[0]?.totalElements || 0
   );
 
   useEffect(() => {
     setRowCountState((prevRowCountState) =>
-      data?.pages[0]?.totalPages !== undefined
-        ? data?.pages[0]?.totalPages
+      data?.pages[0]?.totalElements !== undefined
+        ? data?.pages[0]?.totalElements
         : prevRowCountState
     );
   }, [data]);

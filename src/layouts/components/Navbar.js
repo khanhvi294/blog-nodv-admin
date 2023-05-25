@@ -1,18 +1,20 @@
 import * as React from "react";
 
-import { Button, CircularProgress, Popover, Typography } from "@mui/material";
-import { EyeIcon, FlagIcon } from "../../assets/icons/heroicons";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
+import {
+  CircularProgress,
+  ClickAwayListener,
+  Fade,
+  Popper,
+} from "@mui/material";
+import { useMutation, useQuery } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {
   getNotifications,
   setNotificationRead,
 } from "../../api/notificationApi";
-import {
-  resetCountNotifications,
-  updateCountNotifications,
-} from "../../api/userApi";
-import { useDispatch, useSelector } from "react-redux";
-import { useMutation, useQuery } from "react-query";
+import { EyeIcon, FlagIcon } from "../../assets/icons/heroicons";
 
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
@@ -22,13 +24,13 @@ import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
-import { appRoutes } from "../../routers/AppRoutes";
 import { formatRelative } from "date-fns";
-import { setUser } from "../../redux/slices/userSlice";
+import { resetCountNotifications } from "../../api/userApi";
 import useLogout from "../../hooks/useLogout";
+import { setUser } from "../../redux/slices/userSlice";
+import { appRoutes } from "../../routers/AppRoutes";
 
 function Navbar() {
   const user = useSelector((state) => state.user.data.info);
@@ -63,11 +65,11 @@ function Navbar() {
   ]).current;
 
   return (
-    <AppBar className="!w-full !bg-black ">
-      <Container>
+    <AppBar className="!w-full !bg-white ">
+      <Container className="!pr-9 !max-w-none">
         <Toolbar disableGutters className="justify-end">
           <Box sx={{ flexGrow: 0 }} className="mr-5">
-            <Box sx={{ flexGrow: 0 }} className="mr-5">
+            <Box sx={{ flexGrow: 0 }}>
               <NotificationBell>
                 <IconButton
                   size="large"
@@ -75,7 +77,7 @@ function Navbar() {
                   color="inherit"
                 >
                   <Badge badgeContent={17} color="error">
-                    <NotificationsIcon />
+                    <NotificationsNoneIcon className="text-zinc-500" />
                   </Badge>
                 </IconButton>
               </NotificationBell>
@@ -84,7 +86,11 @@ function Navbar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src={user?.avatar} />
+                <Avatar
+                  alt="Remy Sharp"
+                  src={user?.avatar}
+                  className="border-2"
+                />
               </IconButton>
             </Tooltip>
             <Menu
@@ -126,6 +132,7 @@ const NotificationBell = ({ children }) => {
   const dispatch = useDispatch();
   const socket = useSelector((state) => state.socket.data);
   const currentUserId = useSelector((state) => state.user.data.info.id);
+  const [open, setOpen] = React.useState(false);
   const numBadge = useSelector(
     (state) => state.user.data.info.notificationsCount
   );
@@ -135,17 +142,9 @@ const NotificationBell = ({ children }) => {
     },
   });
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-    if (numBadge > 0) updateUserCountNotification.mutate();
-  };
-
   const handleClose = () => {
-    setAnchorEl(null);
+    setOpen(false);
   };
-
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
 
   const handleReceiveCountNotificationSocket = React.useCallback(
     (payload) => {
@@ -168,27 +167,41 @@ const NotificationBell = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpen((prev) => !prev);
+
+    if (numBadge > 0) updateUserCountNotification.mutate();
+  };
+
   return (
     <div>
-      <div aria-describedby={id} variant="contained" onClick={handleClick}>
+      <div variant="contained" onClick={handleClick}>
         <IconButton size="large" color="inherit">
           <Badge badgeContent={numBadge} color="error">
-            <NotificationsIcon />
+            <NotificationsNoneIcon className="text-zinc-500" />
           </Badge>
         </IconButton>
       </div>
-      <Popover
-        id={id}
+      <Popper
         open={open}
         anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
+        placement="bottom"
+        transition
+        className="z-[9999]"
       >
-        <NotificationList />
-      </Popover>
+        {({ TransitionProps }) => (
+          <Fade {...TransitionProps} timeout={350}>
+            <div>
+              <ClickAwayListener onClickAway={handleClose}>
+                <div>
+                  <NotificationList />
+                </div>
+              </ClickAwayListener>
+            </div>
+          </Fade>
+        )}
+      </Popper>
     </div>
   );
 };
@@ -201,7 +214,7 @@ const NotificationList = () => {
     <>
       <div
         id="dropdownNotification"
-        className="z-20 w-full max-w-sm min-w-[360px] bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-800 dark:divide-gray-700"
+        className="z-20 w-full max-w-sm min-w-[360px] divide-y rounded-xl divide-gray-100 shadow dark:bg-gray-800 dark:divide-gray-700"
       >
         {!isLoading ? (
           <>
@@ -243,14 +256,13 @@ function NotificationItem({ notification }) {
   };
 
   return (
-    <Link
-      href="/"
+    <div
       className="flex px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
       onClick={handleClick}
     >
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 rounded-full w-11 h-11">
         <img
-          className="rounded-full w-11 h-11"
+          className="object-cover w-full h-full rounded-full"
           src={notification.sender.avatar}
           alt={notification.sender.username}
         />
@@ -274,6 +286,6 @@ function NotificationItem({ notification }) {
           <div className="flex-shrink-0 rounded-full bg-blue-500 w-3 h-3 " />
         </div>
       )}
-    </Link>
+    </div>
   );
 }
