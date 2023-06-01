@@ -219,7 +219,7 @@ const NotificationList = ({ onClickViewAll }) => {
 		<>
 			<div
 				id="dropdownNotification"
-				className="z-20 w-full max-w-sm min-w-[360px] divide-y rounded-xl divide-gray-100 shadow dark:bg-gray-800 dark:divide-gray-700"
+				className="z-20 w-full max-w-sm min-w-[360px] divide-y rounded-xl bg-white divide-gray-100 shadow dark:bg-gray-800 dark:divide-gray-700"
 			>
 				{!isLoading ? (
 					<>
